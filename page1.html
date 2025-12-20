@@ -92,5 +92,177 @@
             </div>
         </div>
     </footer>
+    <script>
+        // Проверка авторизации
+        function checkAuth() {
+            const user = localStorage.getItem('currentUser');
+            return user ? JSON.parse(user) : null;
+        }
+
+        // Выход из системы
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+            showMessage('Вы успешно вышли из системы', 'success');
+        }
+
+        // Показать сообщение
+        function showMessage(text, type) {
+            // Создаем элемент для сообщения
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = text;
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            if (type === 'success') {
+                messageDiv.style.backgroundColor = '#4CAF50';
+            } else if (type === 'error') {
+                messageDiv.style.backgroundColor = '#f44336';
+            } else {
+                messageDiv.style.backgroundColor = '#2a5298';
+            }
+            
+            document.body.appendChild(messageDiv);
+            
+            // Удаляем сообщение через 3 секунды
+            setTimeout(() => {
+                messageDiv.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 300);
+            }, 3000);
+            
+            // Добавляем стили для анимации
+            if (!document.querySelector('#messageStyles')) {
+                const style = document.createElement('style');
+                style.id = 'messageStyles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Получить название роли на русском
+        function getRoleName(role) {
+            switch(role) {
+                case 'student': return 'Ученик';
+                case 'parent': return 'Родитель';
+                case 'teacher': return 'Учитель';
+                default: return 'Пользователь';
+            }
+        }
+
+        // Обновление интерфейса в зависимости от статуса авторизации
+        function updateAuthUI() {
+            const currentUser = checkAuth();
+            const loginLink = document.getElementById('loginLink');
+            const userInfo = document.getElementById('userInfo');
+            const authSection = document.getElementById('authSection');
+            const authButton = document.getElementById('authButton');
+            
+            if (currentUser) {
+                // Пользователь авторизован
+                loginLink.style.display = 'none';
+                userInfo.style.display = 'flex';
+                
+                document.getElementById('userNameDisplay').textContent = currentUser.name;
+                document.getElementById('userRoleDisplay').textContent = getRoleName(currentUser.role);
+                
+                // Обновляем блок призыва к действию
+                authSection.innerHTML = `
+                    <h3>Добро пожаловать, ${currentUser.name}!</h3>
+                    <p>Вы авторизованы как ${getRoleName(currentUser.role)}. Перейдите в личный кабинет для доступа ко всем возможностям нашего сайта. У вас есть доступ к электронному дневнику, расписанию занятий, интерактивным заданиям и персональным материалам.</p>
+                    <a href="dashboard.html" class="btn"><i class="fas fa-tachometer-alt"></i> Перейти в личный кабинет</a>
+                    <p style="margin-top: 20px; font-size: 0.9rem;">Не ваш аккаунт? <a href="#" id="logoutLink" style="color: #ffd700; text-decoration: underline;">Выйти из системы</a></p>
+                `;
+                
+                // Добавляем обработчик для кнопки выхода в блоке призыва
+                document.getElementById('logoutLink').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            } else {
+                // Пользователь не авторизован
+                loginLink.style.display = 'flex';
+                userInfo.style.display = 'none';
+                
+                // Восстанавливаем стандартный блок призыва к действию
+                authSection.innerHTML = `
+                    <h3>Присоединяйтесь к нашему сообществу!</h3>
+                    <p>Зарегистрируйтесь на нашем сайте, чтобы получить доступ к персональным материалам, электронному дневнику, расписанию занятий и интерактивным возможностям. Уже более 1000 учеников и родителей используют наш онлайн-сервис!</p>
+                    <a href="login.html" class="btn" id="authButton"><i class="fas fa-user-plus"></i> Зарегистрироваться сейчас</a>
+                    <p style="margin-top: 20px; font-size: 0.9rem;">Уже зарегистрированы? <a href="login.html" style="color: #ffd700; text-decoration: underline;">Войдите в свой аккаунт</a></p>
+                `;
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthUI();
+            
+            // Обработчик кнопки выхода в шапке
+            document.getElementById('logoutBtnMain').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+            
+            // Плавная прокрутка для якорных ссылок
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') !== '#') {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Инициализация базы данных пользователей, если её нет
+            if (!localStorage.getItem('users')) {
+                const initialUsers = [
+                    { id: 1, name: "Иванов Иван", email: "ivan@test.ru", password: "123456", role: "student" },
+                    { id: 2, name: "Петрова Мария", email: "maria@test.ru", password: "123456", role: "parent" },
+                    { id: 3, name: "Сидоров Алексей", email: "alex@test.ru", password: "123456", role: "teacher" }
+                ];
+                localStorage.setItem('users', JSON.stringify(initialUsers));
+                localStorage.setItem('nextUserId', '4');
+            }
+            
+            // Проверяем, был ли пользователь перенаправлен с других страниц
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('registered') && urlParams.get('registered') === 'true') {
+                showMessage('Регистрация прошла успешно! Добро пожаловать!', 'success');
+            }
+            
+            if (urlParams.has('loggedout') && urlParams.get('loggedout') === 'true') {
+                showMessage('Вы успешно вышли из системы', 'success');
+            }
+        });
+    </script>
 </body>
 </html>
