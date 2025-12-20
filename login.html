@@ -67,5 +67,158 @@
             </div>
         </div>
     </footer>
+    <script>
+        // Простая база данных пользователей в localStorage
+        function initDatabase() {
+            if (!localStorage.getItem('users')) {
+                // Начальные пользователи для тестирования
+                const initialUsers = [
+                    { id: 1, name: "Иванов Иван", email: "ivan@test.ru", password: "123456", role: "student" },
+                    { id: 2, name: "Петрова Мария", email: "maria@test.ru", password: "123456", role: "parent" },
+                    { id: 3, name: "Сидоров Алексей", email: "alex@test.ru", password: "123456", role: "teacher" }
+                ];
+                localStorage.setItem('users', JSON.stringify(initialUsers));
+                localStorage.setItem('nextUserId', '4');
+            }
+        }
+
+        // Получить всех пользователей
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('users')) || [];
+        }
+
+        // Сохранить пользователей
+        function saveUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Получить следующее ID пользователя
+        function getNextUserId() {
+            return parseInt(localStorage.getItem('nextUserId') || '1');
+        }
+
+        // Увеличить следующее ID пользователя
+        function incrementNextUserId() {
+            const nextId = getNextUserId() + 1;
+            localStorage.setItem('nextUserId', nextId.toString());
+            return nextId;
+        }
+
+        // Регистрация пользователя
+        function registerUser(name, email, password, role) {
+            const users = getUsers();
+            
+            // Проверка на существующего пользователя
+            const existingUser = users.find(user => user.email === email);
+            if (existingUser) {
+                return { success: false, message: "Пользователь с таким email уже существует" };
+            }
+            
+            // Создание нового пользователя
+            const newUser = {
+                id: getNextUserId(),
+                name: name,
+                email: email,
+                password: password,
+                role: role
+            };
+            
+            users.push(newUser);
+            saveUsers(users);
+            incrementNextUserId();
+            
+            return { success: true, message: "Регистрация прошла успешно!" };
+        }
+
+        // Авторизация пользователя
+        function loginUser(email, password) {
+            const users = getUsers();
+            const user = users.find(user => user.email === email && user.password === password);
+            
+            if (!user) {
+                return { success: false, message: "Неверный email или пароль" };
+            }
+            
+            // Сохраняем информацию о текущем пользователе
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            return { 
+                success: true, 
+                message: "Авторизация прошла успешно!",
+                user: user
+            };
+        }
+
+        // Проверка авторизации
+        function checkAuth() {
+            const user = localStorage.getItem('currentUser');
+            return user ? JSON.parse(user) : null;
+        }
+
+        // Выход из системы
+        function logout() {
+            localStorage.removeItem('currentUser');
+        }
+
+        // Обработка формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const role = document.getElementById('registerRole').value;
+            
+            const result = registerUser(name, email, password, role);
+            
+            const messageDiv = document.getElementById('registerMessage');
+            messageDiv.textContent = result.message;
+            messageDiv.className = 'message ' + (result.success ? 'success' : 'error');
+            messageDiv.style.display = 'block';
+            
+            if (result.success) {
+                document.getElementById('registerForm').reset();
+                // Автоматически авторизуем пользователя после регистрации
+                const loginResult = loginUser(email, password);
+                if (loginResult.success) {
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
+            }
+        });
+
+        // Обработка формы входа
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const result = loginUser(email, password);
+            
+            const messageDiv = document.getElementById('loginMessage');
+            messageDiv.textContent = result.message;
+            messageDiv.className = 'message ' + (result.success ? 'success' : 'error');
+            messageDiv.style.display = 'block';
+            
+            if (result.success) {
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            }
+        });
+
+        // Инициализация базы данных при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            initDatabase();
+            
+            // Если пользователь уже авторизован, перенаправляем на dashboard
+            const currentUser = checkAuth();
+            if (currentUser) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
 </body>
 </html>
