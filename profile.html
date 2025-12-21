@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой профиль - Мой питомец</title>
+    <link rel="stylesheet" href="style-profile.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="img/img3.png" alt="Логотип Мой питомец">
+                <h1>Мой питомец</h1>
+            </div>
+            <nav class="nav">
+                <a href="#" id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <h1 class="title">Мой профиль</h1>      
+        <div class="user">
+            <img src="#########" class="avatar">
+            <div class="information">
+                <h2 id="userName">Мария Сидорова</h2>
+                <span id="userEmail">maria@example.com</span>
+            </div>
+        </div>
+
+        <div class="blocks">
+            <div class="card">
+                <h2 class="card-title">Анкета питомца</h2>
+                <div class="pet-info">
+                    <div>
+                        <span class="info-label">Кличка</span>
+                        <p class="pet-name">Барсик</p>
+                    </div>
+                    <div>
+                        <span class="info-label">Вид</span>
+                        <p>Собака</p>
+                    </div>
+                    <div>
+                        <span class="info-label">Порода</span>
+                        <p>Долматинец</p>
+                    </div>
+                    <div>
+                        <span class="info-label">Возраст</span>
+                        <p>3 года</p>
+                    </div>
+                        <div>
+                        <span class="info-label">Вес</span>
+                        <p>5.2 кг</p>
+                    </div>
+                    <div>
+                    <span class="info-label">Рост</span>
+                        <p>25 см</p>
+                    </div>
+                    <div>
+                        <span class="info-label">Дата рождения</span>
+                        <p>15.04.2021</p>
+                    </div>
+                </div>     
+                <div class="info-block" >
+                    <span class="info-label">Награды </span>
+                    <span class="awards">Достижения</span>
+                    <p>1 место на выставке "Кошки Москвы 2023"</p> 
+                    <p>Лучший представитель породы 2022</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">История посещений ветеринара</h2>    
+                <div class="visit-list">
+                    <div class="visit-item">
+                        <span class="visit-date">15.10.2023</span>
+                        <span class="visit-status">Плановый осмотр</span>
+                        <p class="clinic-name">Ветеринарная клиника "Доктор Айболит"</p>
+                        <p class="done-name">Ежегодный плановый осмотр, вакцинация</p>
+                    </div>
+                    <div class="visit-item">
+                        <span class="visit-date">Дата посещения ветклиники</span>
+                        <span class="visit-status">Цель посещения</span>
+                        <p class="clinic-name">Назавание ветклиники</p>
+                        <p class="done-name">Процедуры</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Принимаемые лекарства</h2>   
+                <div class="medication-list">
+                    <div class="medication-item">
+                        <span class="medication-name">Гельминтал</span>
+                        <span class="medication-date">до 15.12.2023</span>
+                        <p class="dose">1 таблетка каждые 3 месяца</p>
+                        <p class="course-name">Профилактика гельминтов</p>
+                    </div>
+                    <div class="medication-item">
+                        <span class="medication-name">Название преарата</span>
+                        <span class="medication-date">Время приема</span>
+                        <p class="dose">Дозировка</p>
+                        <p class="course-name">Назначение круса</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button class="btn-profile">Редактировать профиль питомца</button>
+            <button class="btn-visit">Добавить посещение</button>
+            <button class="btn-medication">Добавить лекарство</button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="info">
+                <h3>Мой питомец</h3>
+                <p>Помогаем заботиться о ваших любимцах с 2025 года</p>
+            </div>
+            <div class="support">
+                <h4>Поддержка</h4>
+                <a href="mailto:support@mypet.com">support@mypet.com</a>
+                <a href="tel:+79160000000">+7 (916) 000-00-00</a>
+            </div>
+            <div class="social">
+                <h4>Мы в соцсетях</h4>
+                <div class="social-icons">
+                    <a href="#">Telegram</a>
+                    <a href="#">ВКонтакте</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Проверка авторизации
+        function checkAuth() {
+            const user = localStorage.getItem('currentUser');
+            return user ? JSON.parse(user) : null;
+        }
+
+        // Выход из системы
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        // Инициализация страницы при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = checkAuth();
+            
+            if (!currentUser) {
+                // Пользователь не авторизован
+                document.getElementById('unauthorizedMessage').style.display = 'block';
+                document.getElementById('authorizedContent').style.display = 'none';
+            } else {
+                // Пользователь авторизован
+                document.getElementById('unauthorizedMessage').style.display = 'none';
+                document.getElementById('authorizedContent').style.display = 'block';
+                
+                // Заполняем информацию о пользователе
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userEmail').textContent = currentUser.email;
+            }
+
+            // Обработчик кнопки выхода
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+        });
+    </script>
+</body>
+</html>
