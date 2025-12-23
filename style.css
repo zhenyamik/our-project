@@ -184,6 +184,24 @@ body {
     margin-bottom: 15px;
 }
 
+.auth-promo {
+    background: #C8E6C9;
+    color: #555;
+    padding: 40px;
+    margin-top: 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(42, 82, 152, 0.3);
+}
+
+.auth-promo p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .footer {
     background: #2E7D32;
     color: white;

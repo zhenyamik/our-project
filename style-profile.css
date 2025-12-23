@@ -63,7 +63,7 @@ body {
     align-items: center;
 }
 
-.logout-btn {
+.nav a {
     color: white;
     text-decoration: none;
     padding: 10px 20px;
@@ -73,15 +73,21 @@ body {
     align-items: center;
     gap: 8px;
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid white;
-    cursor: pointer;
 }
 
-.logout-btn:hover {
+.nav a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-logout {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid white;
+}
+
+.btn-logout:hover {
     background: white;
     color: #2E7D32;
-    transform: translateY(-2px);
 }
 
 /* Основное содержимое */
@@ -205,7 +211,7 @@ body {
     font-weight: 600;
 }
 
-.pet-info p, .info-block p {
+.pet-info p, .info-block p, .unauth p {
     color: #333;
     font-size: 15px;
     line-height: 1.2;
