@@ -72,44 +72,41 @@
                     <div class="info-block" >
                         <span class="info-label">Награды </span>
                         <span class="awards">Достижения</span>
-                        <p>1 место на выставке "Собаки Москвы 2023"</p> 
+                        <p>1 место на выставке "Кошки Москвы 2023"</p> 
                         <p>Лучший представитель породы 2022</p>
                     </div>
                 </div>
 
                 <div class="card">
                     <h2 class="card-title">История посещений ветеринара</h2>    
-                    <div class="visit-list">
+                    <div class="list">
                         <div class="visit-item">
-                            <span class="visit-date">15.10.2023</span>
-                            <span class="visit-status">Плановый осмотр</span>
-                            <p class="clinic-name">Ветеринарная клиника "Доктор Айболит"</p>
-                            <p class="done-name">Ежегодный плановый осмотр, вакцинация</p>
-                            </div>
-                        <div class="visit-item">
-                            <span class="visit-date">Дата посещения ветклиники</span>
-                            <span class="visit-status">Цель посещения</span>
-                            <p class="clinic-name">Назавание ветклиники</p>
-                            <p class="done-name">Процедуры</p>
+                            <!-- Дописать -->
+                            <input type="text" id="newVisitInput" placeholder="Новый визит...">
+                            <input type="text" id="newVisitDate" placeholder="Дата посещения ветклиники...">
+                            <input type="text" id="newVisitStatus" placeholder="Цель посещения...">
+                            <input type="text" id="newVisitProcedure" placeholder="Пройденные процедуры...">
+                            <button id="addVisitBtn">Добавить</button>
                         </div>
+                        <ul class="visit-list" id="visitList">
+                            <!-- Задачи будут добавляться здесь -->
+                        </ul>
                     </div>
                 </div>
 
                 <div class="card">
                     <h2 class="card-title">Принимаемые лекарства</h2>   
-                    <div class="medication-list">
-                        <div class="medication-item">
-                            <span class="medication-name">Гельминтал</span>
-                            <span class="medication-date">до 15.12.2023</span>
-                            <p class="dose">1 таблетка каждые 3 месяца</p>
-                            <p class="course-name">Профилактика гельминтов</p>
+                    <div class="list">
+                        <div class="medic-item">
+                            <input type="text" id="newMedicInput" placeholder="Новое лекарство...">
+                            <input type="text" id="newMedicDate" placeholder="Время приема...">
+                            <input type="text" id="newMedicStatus" placeholder="Дозировка...">
+                            <input type="text" id="newMedicProcedure" placeholder="Назначение круса...">
+                            <button id="addMedicBtn">Добавить</button>
                         </div>
-                        <div class="medication-item">
-                            <span class="medication-name">Название преарата</span>
-                            <span class="medication-date">Время приема</span>
-                            <p class="dose">Дозировка</p>
-                            <p class="course-name">Назначение круса</p>
-                        </div>
+                        <ul class="medic-list" id="medicList">
+                            <!-- Задачи будут добавляться здесь -->
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -156,6 +153,125 @@
             window.location.href = 'auth.html';
         }
 
+        // Загрузка визитов из localStorage task
+        function loadVisits() {
+            const visits = localStorage.getItem('userVisits');
+            return visits ? JSON.parse(visits) : [];
+        }
+        function loadMedics() {
+            const medics = localStorage.getItem('userMedics');
+            return medics ? JSON.parse(medics) : [];
+        }
+
+        // Сохранение задач в localStorage
+        function saveVisits(visits) {
+            localStorage.setItem('userVisits', JSON.stringify(visits));
+        }
+        function saveMedics(medics) {
+            localStorage.setItem('userMedics', JSON.stringify(medics));
+        }
+
+        // Отображение задач
+        function renderVisits() {
+            const visits = loadVisits();
+            const visitList = document.getElementById('visitList');
+            
+            visitList.innerHTML = '';
+            
+            visits.forEach((visit, index) => {
+                const visitItem = document.createElement('li');
+                visitItem.innerHTML = `
+                    <span>${visit.text}</span>
+                    <span>${visit.date}</span>
+                    <span>${visit.status}</span>
+                    <span>${visit.procedure}</span>
+                    <div class="visit-actions">
+                        <button onclick="deleteVisit(${index})" title="Удалить"><i class="fas fa-trash"></i>Удалить</button>
+                    </div>
+                `;
+                visitList.appendChild(visitItem);
+            });
+        }
+
+        function renderMedics() {
+            const medics = loadMedics();
+            const medicList = document.getElementById('medicList');
+
+            medicList.innerHTML = '';
+
+            medics.forEach((medic, index) => {
+                const medicItem = document.createElement('li');
+                medicItem.innerHTML = `
+                    <span>${medic.text}</span>
+                    <span>${medic.date}</span>
+                    <span>${medic.status}</span>
+                    <span>${medic.procedure}</span>
+                    <div class="medic-actions">
+                        <button onclick="deleteVisit(${index})" title="Удалить"><i class="fas fa-trash"></i>Удалить</button>
+                    </div>
+                `;
+                medicList.appendChild(medicItem);
+            });
+        }
+
+        // Добавление задачи
+        function addVisit(text, date, status, procedure) {
+            const visits = loadVisits();
+
+            visits.push({
+                text: text,
+                date: date,
+                status: status,
+                procedure: procedure,
+            });
+
+            saveVisits(visits);
+            renderVisits();
+
+            // Очистка всех полей
+            document.getElementById('newVisitInput').value = '';
+            document.getElementById('newVisitDate').value = '';
+            document.getElementById('newVisitStatus').value = '';
+            document.getElementById('newVisitProcedure').value = '';
+        }
+
+        function addMedic(text, date, status, procedure) {
+            const medics = loadMedics();
+
+            medics.push({
+                text: text,
+                date: date,
+                status: status,
+                procedure: procedure,
+            });
+
+            saveMedics(medics);
+            renderMedics();
+
+            // Очистка всех полей
+            document.getElementById('newMedicInput').value = '';
+            document.getElementById('newMedicDate').value = '';
+            document.getElementById('newMedicStatus').value = '';
+            document.getElementById('newMedicProcedure').value = '';
+        }
+
+        // Здесь могло бы быть переключение статуса задачи toggleVisit
+
+        // Удаление задачи
+        function deleteVisit(index) {
+            const visits = loadVisits();
+            visits.splice(index, 1);
+            saveVisits(visits);
+            renderVisits();
+        }
+
+        function deleteMedic(index) {
+            const medics = loadMedics();
+            medics.splice(index, 1);
+            saveMedics(medics);
+            renderMedics();
+        }
+
         // Инициализация страницы при загрузке
         document.addEventListener('DOMContentLoaded', function() {
             const currentUser = checkAuth();
@@ -173,6 +289,75 @@
                 document.getElementById('userName').textContent = currentUser.name;
                 document.getElementById('userEmail').textContent = currentUser.email;
             }
+
+            // Инициализация интерактивных элементов
+
+            // 3. Управление задачами
+                renderVisits();
+                
+                document.getElementById('addVisitBtn').addEventListener('click', function() {
+                    const input = document.getElementById('newVisitInput');
+                    const dateInput = document.getElementById('newVisitDate');
+                    const statusInput = document.getElementById('newVisitStatus');
+                    const procedureInput = document.getElementById('newVisitProcedure');
+
+                    const text = input.value.trim();
+                    const date = dateInput.value.trim();
+                    const status = statusInput.value.trim();
+                    const procedure = procedureInput.value.trim();
+
+                    if (text && date && status && procedure) {
+                        addVisit(text, date, status, procedure);
+                    } else {
+                        alert('Заполните все поля!');
+                    }
+                });
+                
+                document.getElementById('newVisitInput').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const text = this.value.trim();
+                        const date = document.getElementById('newVisitDate').value.trim();
+                        const status = document.getElementById('newVisitStatus').value.trim();
+                        const procedure = document.getElementById('newVisitProcedure').value.trim();
+
+                        if (text && date && status && procedure) {
+                            addVisit(text, date, status, procedure);
+                        }
+                    }
+                });
+
+                renderMedics();
+
+                document.getElementById('addMedicBtn').addEventListener('click', function() {
+                    const input = document.getElementById('newMedicInput');
+                    const dateInput = document.getElementById('newMedicDate');
+                    const statusInput = document.getElementById('newMedicStatus');
+                    const procedureInput = document.getElementById('newMedicProcedure');
+
+                    const text = input.value.trim();
+                    const date = dateInput.value.trim();
+                    const status = statusInput.value.trim();
+                    const procedure = procedureInput.value.trim();
+
+                    if (text && date && status && procedure) {
+                        addMedic(text, date, status, procedure);
+                    } else {
+                        alert('Заполните все поля!');
+                    }
+                });
+
+                document.getElementById('newMedicInput').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const text = this.value.trim();
+                        const date = document.getElementById('newMedicDate').value.trim();
+                        const status = document.getElementById('newMedicStatus').value.trim();
+                        const procedure = document.getElementById('newMedicProcedure').value.trim();
+
+                        if (text && date && status && procedure) {
+                            addMedic(text, date, status, procedure);
+                        }
+                    }
+                });
 
             // Обработчик кнопки выхода
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
