@@ -146,42 +146,187 @@ body {
     background: #43A047;
 }
 
-.opportunity {
-    padding: 80px 0;
-    background: white;
-}
-
-.section-title {
-    text-align: center;
-    font-size: 36px;
-    color: #2E7D32;
-    margin-bottom: 50px;
-    position: relative;
-}
-
+/* Стили для карточек в форме лапки собаки */
 .opportunity-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
+    position: relative;
+    z-index: 1;
 }
 
 .card {
+    position: relative;
     background: #F9FDF9;
-    padding: 30px;
-    border-radius: 15px;
+    padding: 30px 25px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
     text-align: center;
     transition: transform 0.3s ease;
     border: 1px solid #E8F5E9;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(76, 175, 80, 0.1);
+.card::before,
+.card::after {
+    content: '';
+    position: absolute;
+    background: #F9FDF9;
+    border: 1px solid #E8F5E9;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* Пальцы лапки (4 пальца сверху) */
+.card::before {
+    width: 40px;
+    height: 50px;
+    top: -15px;
+    left: 25%;
+    transform: translateX(-50%);
+}
+
+.card::after {
+    width: 40px;
+    height: 50px;
+    top: -15px;
+    right: 25%;
+    transform: translateX(50%);
+}
+
+.card:nth-child(odd)::before {
+    left: 30%;
+}
+
+.card:nth-child(odd)::after {
+    right: 30%;
+}
+
+.card:nth-child(even)::before {
+    left: 20%;
+}
+
+.card:nth-child(even)::after {
+    right: 20%;
+}
+
+/* Дополнительные пальцы для эффекта лапки */
+.card .paw-toe-1,
+.card .paw-toe-2 {
+    position: absolute;
+    width: 35px;
+    height: 45px;
+    background: #F9FDF9;
+    border: 1px solid #E8F5E9;
+    border-radius: 50%;
+    top: -12px;
+    z-index: 2;
+}
+
+.card .paw-toe-1 {
+    left: 40%;
+    transform: translateX(-100%);
+}
+
+.card .paw-toe-2 {
+    right: 40%;
+    transform: translateX(100%);
+}
+
+/* Содержимое карточки */
+.card-content {
+    position: relative;
+    z-index: 3;
+    padding: 10px;
 }
 
 .card h3 {
     color: #2E7D32;
     margin-bottom: 15px;
+    font-size: 20px;
+    z-index: 3;
+    position: relative;
+}
+
+.card p {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.5;
+    z-index: 3;
+    position: relative;
+}
+
+/* Подушечка лапки (фон) */
+.card::after {
+    content: '';
+    position: absolute;
+    width: 80%;
+    height: 70%;
+    background: #F1F8E9;
+    border-radius: 50%;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    opacity: 0.5;
+}
+
+/* Анимация при наведении */
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(76, 175, 80, 0.15);
+}
+
+.card:hover::before,
+.card:hover::after,
+.card:hover .paw-toe-1,
+.card:hover .paw-toe-2 {
+    transform: translateY(-5px);
+}
+
+/* Для иконки в последней карточке */
+.card .feature-icon {
+    position: relative;
+    z-index: 3;
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #2E7D32;
+}
+
+/* Адаптивность для карточек-лапок */
+@media (max-width: 768px) {
+    .card {
+        min-height: 250px;
+        padding: 25px 20px;
+    }
+    
+    .card::before,
+    .card::after {
+        width: 35px;
+        height: 45px;
+        top: -12px;
+    }
+    
+    .card .paw-toe-1,
+    .card .paw-toe-2 {
+        width: 30px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        min-height: 220px;
+        padding: 20px 15px;
+    }
+    
+    .card h3 {
+        font-size: 18px;
+    }
+    
+    .card p {
+        font-size: 14px;
+    }
 }
 
 .auth-promo {
