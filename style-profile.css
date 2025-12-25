@@ -1,6 +1,3 @@
-/* style-profile.css */
-
-/* Базовые стили - наследуем от основной страницы */
 * {
     margin: 0;
     padding: 0;
@@ -11,15 +8,18 @@ body {
     font-family: 'Nunito', Arial, sans-serif;
     line-height: 1.6;
     color: #333;
-    background: #f5f7fa;
+    background: 135deg, #f5f7fa 0%, #e4edf5 100%;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
-/* Хедер - аналогично главной странице */
+.block {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .header {
-    background: #2E7D32;
+    background:#2E7D32;
     color: white;
     padding: 15px 0;
     box-shadow: 0 4px 12px rgba(0, 94, 3, 0.2);
@@ -29,9 +29,6 @@ body {
 }
 
 .header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -80,230 +77,131 @@ body {
     transform: translateY(-2px);
 }
 
-.btn-logout {
+.btn-login {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid white;
 }
 
-.btn-logout:hover {
+.btn-login:hover {
     background: white;
     color: #2E7D32;
 }
 
-/* Основное содержимое */
-.main {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-    flex: 1;
-    width: 100%;
+.important {
+    padding: 80px 0;
+    background: #C8E6C9;
 }
 
-.title {
-    font-size: 36px;
-    color: #2E7D32;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-/* Блок информации о пользователе */
-.user {
-    background: #F9FDF9;
-    border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 40px;
+.important .block {
     display: flex;
     align-items: center;
-    gap: 30px;
-    border: 1px solid #E8F5E9;
+    gap: 60px;
 }
 
-.avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #4CAF50;
+.important-content {
+    flex: 1;
+}
+
+.important h2 {
+    font-size: 42px;
+    color: #2E7D32;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.important p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.image {
+    flex: 1;
+}
+
+.image img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    display: inline-block;
+    background: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
 }
 
-.information {
-    flex: 1;
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    background: #43A047;
 }
 
-.information h2 {
-    font-size: 28px;
+.opportunity {
+    padding: 80px 0;
+    background: white;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 36px;
     color: #2E7D32;
-    margin-bottom: 10px;
+    margin-bottom: 50px;
+    position: relative;
 }
 
-.information span {
-    font-size: 16px;
-    color: #666;
-    display: block;
-    margin-bottom: 15px;
-}
-
-/* Сетка карточек */
-.blocks {
+.opportunity-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
-    margin-bottom: 40px;
 }
 
 .card {
     background: #F9FDF9;
     padding: 30px;
     border-radius: 15px;
-    border: 1px solid #E8F5E9;
+    text-align: center;
     transition: transform 0.3s ease;
+    border: 1px solid #E8F5E9;
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(76, 175, 80, 0.1);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(76, 175, 80, 0.1);
 }
 
-.card-title {
+.card h3 {
     color: #2E7D32;
-    font-size: 22px;
-    margin-bottom: 25px;
-    padding-bottom: 5px;
+    margin-bottom: 15px;
 }
 
-/* Анкета питомца */
-.pet-info {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-bottom: 25px;
-    background: white;
-    padding: 10px;
-    padding-left: 20px;
-    border-radius: 10px;
-    border-left: 4px solid #4CAF50;
-}
-
-.info-block {
-    background: white;
-    padding: 10px;
-    padding-left: 20px;
-    border-radius: 10px;
-    border-left: 4px solid #4CAF50;
-}
-
-.info-label {
-    display: block;
-    color: #2E7D32;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 3px;
-}
-
-.info-block span:first-of-type {
-    margin-bottom: 0;
-}
-
-.awards {
-    color: #FF9800;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.pet-info p, .info-block p, .unauth p {
-    color: #333;
-    font-size: 15px;
-    line-height: 1.2;
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-
-.info-block p {
-    margin-top: 3px;
-    line-height: 1.4;
-}
-
-/* Списки посещений и лекарств */
-.visit-list,
-.medication-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.visit-item,
-.medication-item {
-    background: white;
-    padding: 10px;
-    padding-left: 20px;
-    border-radius: 10px;
-    border-left: 4px solid #4CAF50;
-}
-
-.visit-date,
-.medication-name {
-    display:  block;
-    color: #2E7D32;
-    font-size: 14px;
-    font-weight: 600;
-    margin-right: 10px;
-}
-
-.visit-status,
-.medication-date {
-    display:  block;
-    color: #FF9800;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.clinic-name, .dose {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-top: 5px;
-}
-
-.course-name, .done-name {
+.auth-promo {
+    background: #C8E6C9;
     color: #555;
-    margin-top: 3px;
-    font-size: 14px;
+    padding: 40px;
+    margin-top: 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(42, 82, 152, 0.3);
 }
 
-/* Кнопки действий профиля */
-.profile-actions {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
+.auth-promo p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.profile-actions button {
-    display: flex;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-    padding: 15px 30px;
-    font-weight: 600;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    justify-content: center;
-    min-width: 200px;
-    transition: all 0.3s ease;
-}
-
-.profile-actions button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-    background: #43A047;
-}
-
-/* Футер - аналогично главной странице */
 .footer {
     background: #2E7D32;
     color: white;
@@ -311,13 +209,10 @@ body {
 }
 
 .footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 150px;
-    margin-bottom: 40px;
+    gap: 40px;
+    margin-bottom: 30px;
 }
 
 .footer h3, .footer h4 {
@@ -325,7 +220,7 @@ body {
     margin-bottom: 20px;
 }
 
-.support a, .social a {
+.links a, .support a, .social a {
     display: block;
     color: #E8F5E9;
     text-decoration: none;
@@ -333,70 +228,13 @@ body {
     transition: color 0.3s ease;
 }
 
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .user {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .pet-info {
-        grid-template-columns: 1fr;
-    }
-    
-    .blocks {
-        grid-template-columns: 1fr;
-    }
-    
-    .profile-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .profile-actions button {
-        width: 100%;
-        max-width: 300px;
-    }
-    
-    .footer .info,
-    .footer .support,
-    .footer .social {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    
-    .social-icons {
-        justify-content: center;
-    }
+.links a:hover, .support a:hover, .social a {
+    color: white;
 }
 
-@media (max-width: 480px) {
-    .logo h1 {
-        font-size: 20px;
-    }
-    
-    .title {
-        font-size: 28px;
-    }
-    
-    .information h2 {
-        font-size: 24px;
-    }
-    
-    .card-title {
-        font-size: 20px;
-    }
-    
-    .btn-profile,
-    .btn-visit,
-    .btn-medication {
-        min-width: auto;
-        width: 100%;
-    }
+.privacy-link {
+    color: #C8E6C9;
+    text-decoration: none;
+    margin-top: 10px;
+    display: inline-block;
 }
