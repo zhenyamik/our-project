@@ -237,6 +237,179 @@ body {
     transition: all 0.3s ease;
 }
 
+.card .visit-item:hover,
+.card .medic-item:hover {
+    border-color: #4CAF50
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.12)
+}
+
+/* стили для полей ввода */
+.card .visit-item input,
+.card .medic-item input {
+    flex: 1;
+    min-width: 180 px;
+    padding: 12px 18px;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    background: #FAFAFA;
+    transition: all 0.3s ease;
+}
+.card .visit-item input:focus,
+.card .medic-item input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Стили для кнопки добавления */
+.card .visit-item button,
+.card .medic-item button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 3px 8px rgba(76, 175, 80, 0.3);
+}
+
+.card .visit-item button:hover,
+.card .medic-item button:hover {
+    background: #43A047;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(76, 175, 80, 0.4);
+}
+
+.card .visit-item button:active,
+.card .medic-item button:active {
+    transform: translateY(0);
+}
+
+/* Стили для списков посещений и лекарств */
+.visit-list,
+.medic-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.visit-list li,
+.medic-list li {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #4CAF50;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) auto;
+    gap: 15px;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    animation: fadeIn 0.3s ease;
+}
+
+.visit-list li:hover,
+.medic-list li:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для кнопки удаления */
+.visit-actions,
+.medic-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.visit-actions button,
+.medic-actions button {
+    background: #FF5252;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.visit-actions button:hover,
+.medic-actions button:hover {
+    background: #FF0000;
+    transform: scale(1.05);
+}
+
+.visit-actions button i,
+.medic-actions button i {
+    font-size: 12px;
+}
+
+/* Плейсхолдеры для полей ввода */
+.card .visit-item input::placeholder,
+.card .medic-item input::placeholder {
+    color: #999;
+    font-weight: 400;
+}
+
+/* Адаптивность для карточек */
+@media (max-width: 992px) {
+    .visit-list li,
+    .medic-list li {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .visit-actions,
+    .medic-actions {
+        grid-column: span 2;
+        justify-content: center;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .card .visit-item,
+    .card .medic-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .card .visit-item input,
+    .card .medic-item input,
+    .card .visit-item button,
+    .card .medic-item button {
+        min-width: 100%;
+        width: 100%;
+    }
+    
+    .visit-list li,
+    .medic-list li {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .visit-actions,
+    .medic-actions {
+        grid-column: 1;
+        margin-top: 15px;
+        justify-content: center;
+    }
+}
+
 .visit-date,
 .medic-name {
     display:  block;
