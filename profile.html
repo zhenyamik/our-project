@@ -42,33 +42,40 @@
                     <div class="pet-info">
                         <div>
                             <span class="info-label">Кличка</span>
-                            <p>Барсик</p>
+                            <input type="text" class="pet-info-edit" id="petNameInput" placeholder="Имя вашего питомца" style="display: none">
+                            <p class="pet-info-text" id="petNameText">Барсик</p>
                         </div>
                         <div>
                             <span class="info-label">Вид</span>
-                            <p>Собака</p>
+                            <input type="text" class="pet-info-edit" id="petSpecieInput" placeholder="Вид вашего питомца" style="display: none">
+                            <p class="pet-info-text" id="petSpecieText">Собака</p>
                         </div>
                         <div>
                             <span class="info-label">Порода</span>
-                            <p>Долматинец</p>
+                            <input type="text" class="pet-info-edit" id="petBreedInput" placeholder="Порода вашего питомца" style="display: none">
+                            <p class="pet-info-text" id="petBreedText">Долматинец</p>
                         </div>
                         <div>
-                        <span class="info-label">Возраст</span>
-                            <p>3 года</p>
+                            <span class="info-label">Возраст</span>
+                            <input type="text" class="pet-info-edit" id="petAgeInput" placeholder="Возраст вашего питомца" style="display: none">
+                            <p class="pet-info-text" id="petAgeText">3 года</p>
                         </div>
                         <div>
                             <span class="info-label">Вес</span>
-                            <p>5.2 кг</p>
+                            <input type="text" class="pet-info-edit" id="petWeightInput" placeholder="Вес вашего питомца" style="display: none">
+                            <p class="pet-info-text" id="petWeightText">5.2 кг</p>
                         </div>
                         <div>
-                        <span class="info-label">Рост</span>
-                            <p>25 см</p>
+                            <span class="info-label">Рост</span>
+                            <input type="text" class="pet-info-edit" id="petHeightInput" placeholder="Рост вашего питомца" style="display: none">
+                            <p class="pet-info-text" id="petHeightText">25 см</p>
                         </div>
                         <div>
                             <span class="info-label">Дата рождения</span>
-                            <p>15.04.2021</p>
+                            <input type="text" class="pet-info-edit" id="petBirthDateInput" placeholder="Дата рождения вашего питомца" style="display: none">
+                            <p class="pet-info-text" id="petBirthDateText">15.04.2021</p>
                         </div>
-                        </div>     
+                    </div>     
                     <div class="info-block" >
                         <span class="info-label">Награды </span>
                         <span class="awards">Достижения</span>
@@ -113,7 +120,9 @@
             </div>
 
             <div class="profile-actions">
-                <button class="btn-profile">Редактировать профиль питомца</button>
+                <button class="btn-profile" id="editPetProfileBtn">Редактировать профиль питомца</button>
+                <button class="btn-save" id="savePetProfileBtn" style="display: none;">Сохранить изменения</button>
+                <button class="btn-cancel" id="cancelPetProfileBtn" style="display: none;">Отмена</button>
                 <button class="btn-visit" id="showVisitItemBtn">Добавить посещение</button>
                 <button class="btn-medication" id="showMedicItemBtn">Добавить лекарство</button>
             </div>
@@ -155,6 +164,10 @@
         }
 
         // Загрузка визитов и лекарств из localStorage
+        function loadPetProfile() {
+            const petProfile = localStorage.getItem('petProfile');
+            return petProfile ? JSON.parse(petProfile) : null;
+        }
         function loadVisits() {
             const visits = localStorage.getItem('userVisits');
             return visits ? JSON.parse(visits) : [];
@@ -165,11 +178,102 @@
         }
 
         // Сохранение визитов и лекарств в localStorage
+        function savePetProfile(petProfile) {
+            localStorage.setItem('petProfile', JSON.stringify(petProfile));
+        }
         function saveVisits(visits) {
             localStorage.setItem('userVisits', JSON.stringify(visits));
         }
         function saveMedics(medics) {
             localStorage.setItem('userMedics', JSON.stringify(medics));
+        }
+
+        // Отображение данных питомца
+        function renderPetProfile() {
+            const petProfile = loadPetProfile();
+            
+            if (petProfile) {
+                document.getElementById('petNameText').textContent = petProfile.name || 'Не указано';
+                document.getElementById('petSpecieText').textContent = petProfile.type || 'Не указано';
+                document.getElementById('petBreedText').textContent = petProfile.breed || 'Не указано';
+                document.getElementById('petAgeText').textContent = petProfile.age || 'Не указано';
+                document.getElementById('petWeightText').textContent = petProfile.weight || 'Не указано';
+                document.getElementById('petHeightText').textContent = petProfile.height || 'Не указано';
+                document.getElementById('petBirthDateText').textContent = petProfile.birthDate || 'Не указано';
+
+                document.getElementById('petNameInput').value = petProfile.name || '';
+                document.getElementById('petSpecieInput').value = petProfile.type || '';
+                document.getElementById('petBreedInput').value = petProfile.breed || '';
+                document.getElementById('petAgeInput').value = petProfile.age || '';
+                document.getElementById('petWeightInput').value = petProfile.weight || '';
+                document.getElementById('petHeightInput').value = petProfile.height || '';
+                document.getElementById('petBirthDateInput').value = petProfile.birthDate || '';
+            }
+        }
+
+        // Включение режима редактирования
+        function enableEditMode() {
+            const textElements = document.querySelectorAll('.pet-info-text');
+            textElements.forEach(element => {
+                element.style.display = 'none';
+            });
+            
+            const inputElements = document.querySelectorAll('.pet-info-edit');
+            inputElements.forEach(element => {
+                element.style.display = 'block';
+            });
+            
+            document.getElementById('editPetProfileBtn').style.display = 'none';
+            document.getElementById('savePetProfileBtn').style.display = 'inline-block';
+            document.getElementById('cancelPetProfileBtn').style.display = 'inline-block';
+        }
+
+        // Выключение режима редактирования
+        function disableEditMode() {
+            const textElements = document.querySelectorAll('.pet-info-text');
+            textElements.forEach(element => {
+                element.style.display = 'block';
+            });
+            
+            const inputElements = document.querySelectorAll('.pet-info-edit');
+            inputElements.forEach(element => {
+                element.style.display = 'none';
+            });
+            
+            document.getElementById('editPetProfileBtn').style.display = 'inline-block';
+            document.getElementById('savePetProfileBtn').style.display = 'none';
+            document.getElementById('cancelPetProfileBtn').style.display = 'none';
+        }
+
+         // Сохранение данных питомца
+        function editPetProfile() {
+            const petProfile = {
+                name: document.getElementById('petNameInput').value.trim(),
+                type: document.getElementById('petSpecieInput').value.trim(),
+                breed: document.getElementById('petBreedInput').value.trim(),
+                age: document.getElementById('petAgeInput').value.trim(),
+                weight: document.getElementById('petWeightInput').value.trim(),
+                height: document.getElementById('petHeightInput').value.trim(),
+                birthDate: document.getElementById('petBirthDateInput').value.trim(),
+            };
+            
+            savePetProfile(petProfile);
+
+            document.getElementById('petNameText').textContent = petProfile.name || 'Не указано';
+            document.getElementById('petSpecieText').textContent = petProfile.type || 'Не указано';
+            document.getElementById('petBreedText').textContent = petProfile.breed || 'Не указано';
+            document.getElementById('petAgeText').textContent = petProfile.age || 'Не указано';
+            document.getElementById('petWeightText').textContent = petProfile.weight || 'Не указано';
+            document.getElementById('petHeightText').textContent = petProfile.height || 'Не указано';
+            document.getElementById('petBirthDateText').textContent = petProfile.birthDate || 'Не указано';
+            
+            disableEditMode();
+        }
+
+        // Отмена редактирования Data
+        function cancelEdit() {
+            disableEditMode();
+            renderPetProfile();
         }
 
         // Отображение визитов и лекарств
@@ -271,45 +375,6 @@
             renderMedics();
         }
 
-        // Отображение полей ввода
-        function renderVisitItem() {
-            const showButton = document.getElementById('showVisitItemBtn');
-            const hideButton = document.getElementById('addVisitBtn');
-            const cancelButton = document.getElementById('cancelVisitBtn');
-            const element = document.getElementById('visitItem');
-
-            showButton.addEventListener('click', function() {
-                element.style.display = 'block';
-            });
-
-            hideButton.addEventListener('click', function() {
-                element.style.display = 'none';
-            });
-
-            cancelButton.addEventListener('click', function() {
-                element.style.display = 'none';
-            });
-        }
-
-        function renderMedicItem() {
-            const showButton = document.getElementById('showMedicItemBtn');
-            const hideButton = document.getElementById('addMedicBtn');
-            const cancelButton = document.getElementById('cancelMedicBtn');
-            const element = document.getElementById('medicItem');
-
-            showButton.addEventListener('click', function() {
-                element.style.display = 'block';
-            });
-
-            hideButton.addEventListener('click', function() {
-                element.style.display = 'none';
-            });
-
-            cancelButton.addEventListener('click', function() {
-                element.style.display = 'none';
-            });
-        }
-
         // Инициализация страницы при загрузке
         document.addEventListener('DOMContentLoaded', function() {
             const currentUser = checkAuth();
@@ -326,16 +391,35 @@
                 // Заполняем информацию о пользователе
                 document.getElementById('userName').textContent = currentUser.name;
                 document.getElementById('userEmail').textContent = currentUser.email;
+
+                // Загружаем данные питомца
+                renderPetProfile();
             }
 
             // Инициализация интерактивных элементов
 
+            // 1. Обработчики для редактирования профиля питомца
+            document.getElementById('editPetProfileBtn').addEventListener('click', enableEditMode);
+            document.getElementById('savePetProfileBtn').addEventListener('click', editPetProfile);
+            document.getElementById('cancelPetProfileBtn').addEventListener('click', cancelEdit);
+
             // 3. Управление визитами и лекарстами
             renderVisits();
+            renderMedics();
+            
+            // Обработчики для добавления посещений
+            document.getElementById('showVisitItemBtn').addEventListener('click', function() {
+                document.getElementById('visitItem').style.display = 'block';
+            });
 
-            renderVisitItem();
-            renderMedicItem();
-                
+            document.getElementById('addVisitBtn').addEventListener('click', function() {
+                document.getElementById('visitItem').style.display = 'none';
+            });
+
+            document.getElementById('cancelVisitBtn').addEventListener('click', function() {
+                document.getElementById('visitItem').style.display = 'none';
+            });
+
             document.getElementById('addVisitBtn').addEventListener('click', function() {
                 const input = document.getElementById('newVisitInput');
                 const dateInput = document.getElementById('newVisitDate');
@@ -353,21 +437,19 @@
                     alert('Заполните все поля!');
                 }
             });
-                
-            document.getElementById('newVisitInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const text = this.value.trim();
-                    const date = document.getElementById('newVisitDate').value.trim();
-                    const status = document.getElementById('newVisitStatus').value.trim();
-                    const procedure = document.getElementById('newVisitProcedure').value.trim();
-
-                    if (text && date && status && procedure) {
-                        addVisit(text, date, status, procedure);
-                    }
-                }
+            
+            // Обработчики для добавления лекарств
+            document.getElementById('showMedicItemBtn').addEventListener('click', function() {
+                document.getElementById('medicItem').style.display = 'block';
             });
 
-            renderMedics();
+            document.getElementById('addMedicBtn').addEventListener('click', function() {
+                document.getElementById('medicItem').style.display = 'none';
+            });
+
+            document.getElementById('cancelMedicBtn').addEventListener('click', function() {
+                document.getElementById('medicItem').style.display = 'none';
+            });
 
             document.getElementById('addMedicBtn').addEventListener('click', function() {
                 const input = document.getElementById('newMedicInput');
@@ -384,19 +466,6 @@
                     addMedic(text, date, status, procedure);
                 } else {
                     alert('Заполните все поля!');
-                }
-            });
-
-            document.getElementById('newMedicInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const text = this.value.trim();
-                    const date = document.getElementById('newMedicDate').value.trim();
-                    const status = document.getElementById('newMedicStatus').value.trim();
-                    const procedure = document.getElementById('newMedicProcedure').value.trim();
-
-                    if (text && date && status && procedure) {
-                        addMedic(text, date, status, procedure);
-                    }
                 }
             });
 
