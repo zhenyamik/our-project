@@ -80,16 +80,16 @@
                 <div class="card">
                     <h2 class="card-title">История посещений ветеринара</h2>    
                     <div class="list">
-                        <div class="visit-item">
-                            <!-- Дописать -->
+                        <div class="visit-item" id="visitItem" style="display: none">
                             <input type="text" id="newVisitInput" placeholder="Название ветклиники">
                             <input type="text" id="newVisitDate" placeholder="Дата посещения">
                             <input type="text" id="newVisitStatus" placeholder="Цель посещения">
                             <input type="text" id="newVisitProcedure" placeholder="Пройденные процедуры">
+                            <button id="cancelVisitBtn">Отмена</button>
                             <button id="addVisitBtn">Добавить</button>
                         </div>
                         <ul class="visit-list" id="visitList">
-                            <!-- Задачи будут добавляться здесь -->
+                            <!-- Посещения будут добавляться здесь -->
                         </ul>
                     </div>
                 </div>
@@ -97,15 +97,16 @@
                 <div class="card">
                     <h2 class="card-title">Принимаемые лекарства</h2>   
                     <div class="list">
-                        <div class="medic-item">
+                        <div class="medic-item" id="medicItem" style="display: none">
                             <input type="text" id="newMedicInput" placeholder="Название лекарства">
                             <input type="text" id="newMedicDate" placeholder="Время приема">
                             <input type="text" id="newMedicStatus" placeholder="Дозировка">
                             <input type="text" id="newMedicProcedure" placeholder="Назначение курса">
+                            <button id="cancelMedicBtn">Отмена</button>
                             <button id="addMedicBtn">Добавить</button>
                         </div>
                         <ul class="medic-list" id="medicList">
-                            <!-- Задачи будут добавляться здесь -->
+                            <!-- Лекарства будут добавляться здесь -->
                         </ul>
                     </div>
                 </div>
@@ -113,8 +114,8 @@
 
             <div class="profile-actions">
                 <button class="btn-profile">Редактировать профиль питомца</button>
-                <button class="btn-visit">Добавить посещение</button>
-                <button class="btn-medication">Добавить лекарство</button>
+                <button class="btn-visit" id="showVisitItemBtn">Добавить посещение</button>
+                <button class="btn-medication" id="showMedicItemBtn">Добавить лекарство</button>
             </div>
         </div>
     </main>
@@ -153,7 +154,7 @@
             window.location.href = 'auth.html';
         }
 
-        // Загрузка визитов из localStorage task
+        // Загрузка визитов и лекарств из localStorage
         function loadVisits() {
             const visits = localStorage.getItem('userVisits');
             return visits ? JSON.parse(visits) : [];
@@ -163,7 +164,7 @@
             return medics ? JSON.parse(medics) : [];
         }
 
-        // Сохранение задач в localStorage
+        // Сохранение визитов и лекарств в localStorage
         function saveVisits(visits) {
             localStorage.setItem('userVisits', JSON.stringify(visits));
         }
@@ -171,7 +172,7 @@
             localStorage.setItem('userMedics', JSON.stringify(medics));
         }
 
-        // Отображение задач
+        // Отображение визитов и лекарств
         function renderVisits() {
             const visits = loadVisits();
             const visitList = document.getElementById('visitList');
@@ -207,14 +208,14 @@
                     <span>${medic.status}</span>
                     <span>${medic.procedure}</span>
                     <div class="medic-actions">
-                        <button onclick="deleteVisit(${index})" title="Удалить"><i class="fas fa-trash"></i>Удалить</button>
+                        <button onclick="deleteMedic(${index})" title="Удалить"><i class="fas fa-trash"></i>Удалить</button>
                     </div>
                 `;
                 medicList.appendChild(medicItem);
             });
         }
 
-        // Добавление задачи
+        // Добавление визита или лекарства
         function addVisit(text, date, status, procedure) {
             const visits = loadVisits();
 
@@ -228,7 +229,6 @@
             saveVisits(visits);
             renderVisits();
 
-            // Очистка всех полей
             document.getElementById('newVisitInput').value = '';
             document.getElementById('newVisitDate').value = '';
             document.getElementById('newVisitStatus').value = '';
@@ -248,7 +248,6 @@
             saveMedics(medics);
             renderMedics();
 
-            // Очистка всех полей
             document.getElementById('newMedicInput').value = '';
             document.getElementById('newMedicDate').value = '';
             document.getElementById('newMedicStatus').value = '';
@@ -257,7 +256,7 @@
 
         // Здесь могло бы быть переключение статуса задачи toggleVisit
 
-        // Удаление задачи
+        // Удаление визита или лекарства
         function deleteVisit(index) {
             const visits = loadVisits();
             visits.splice(index, 1);
@@ -270,6 +269,45 @@
             medics.splice(index, 1);
             saveMedics(medics);
             renderMedics();
+        }
+
+        // Отображение полей ввода
+        function renderVisitItem() {
+            const showButton = document.getElementById('showVisitItemBtn');
+            const hideButton = document.getElementById('addVisitBtn');
+            const cancelButton = document.getElementById('cancelVisitBtn');
+            const element = document.getElementById('visitItem');
+
+            showButton.addEventListener('click', function() {
+                element.style.display = 'block';
+            });
+
+            hideButton.addEventListener('click', function() {
+                element.style.display = 'none';
+            });
+
+            cancelButton.addEventListener('click', function() {
+                element.style.display = 'none';
+            });
+        }
+
+        function renderMedicItem() {
+            const showButton = document.getElementById('showMedicItemBtn');
+            const hideButton = document.getElementById('addMedicBtn');
+            const cancelButton = document.getElementById('cancelMedicBtn');
+            const element = document.getElementById('medicItem');
+
+            showButton.addEventListener('click', function() {
+                element.style.display = 'block';
+            });
+
+            hideButton.addEventListener('click', function() {
+                element.style.display = 'none';
+            });
+
+            cancelButton.addEventListener('click', function() {
+                element.style.display = 'none';
+            });
         }
 
         // Инициализация страницы при загрузке
@@ -292,72 +330,75 @@
 
             // Инициализация интерактивных элементов
 
-            // 3. Управление задачами
-                renderVisits();
-                
-                document.getElementById('addVisitBtn').addEventListener('click', function() {
-                    const input = document.getElementById('newVisitInput');
-                    const dateInput = document.getElementById('newVisitDate');
-                    const statusInput = document.getElementById('newVisitStatus');
-                    const procedureInput = document.getElementById('newVisitProcedure');
+            // 3. Управление визитами и лекарстами
+            renderVisits();
 
-                    const text = input.value.trim();
-                    const date = dateInput.value.trim();
-                    const status = statusInput.value.trim();
-                    const procedure = procedureInput.value.trim();
+            renderVisitItem();
+            renderMedicItem();
+                
+            document.getElementById('addVisitBtn').addEventListener('click', function() {
+                const input = document.getElementById('newVisitInput');
+                const dateInput = document.getElementById('newVisitDate');
+                const statusInput = document.getElementById('newVisitStatus');
+                const procedureInput = document.getElementById('newVisitProcedure');
+
+                const text = input.value.trim();
+                const date = dateInput.value.trim();
+                const status = statusInput.value.trim();
+                const procedure = procedureInput.value.trim();
+
+                if (text && date && status && procedure) {
+                    addVisit(text, date, status, procedure);
+                } else {
+                    alert('Заполните все поля!');
+                }
+            });
+                
+            document.getElementById('newVisitInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const text = this.value.trim();
+                    const date = document.getElementById('newVisitDate').value.trim();
+                    const status = document.getElementById('newVisitStatus').value.trim();
+                    const procedure = document.getElementById('newVisitProcedure').value.trim();
 
                     if (text && date && status && procedure) {
                         addVisit(text, date, status, procedure);
-                    } else {
-                        alert('Заполните все поля!');
                     }
-                });
-                
-                document.getElementById('newVisitInput').addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        const text = this.value.trim();
-                        const date = document.getElementById('newVisitDate').value.trim();
-                        const status = document.getElementById('newVisitStatus').value.trim();
-                        const procedure = document.getElementById('newVisitProcedure').value.trim();
+                }
+            });
 
-                        if (text && date && status && procedure) {
-                            addVisit(text, date, status, procedure);
-                        }
-                    }
-                });
+            renderMedics();
 
-                renderMedics();
+            document.getElementById('addMedicBtn').addEventListener('click', function() {
+                const input = document.getElementById('newMedicInput');
+                const dateInput = document.getElementById('newMedicDate');
+                const statusInput = document.getElementById('newMedicStatus');
+                const procedureInput = document.getElementById('newMedicProcedure');
 
-                document.getElementById('addMedicBtn').addEventListener('click', function() {
-                    const input = document.getElementById('newMedicInput');
-                    const dateInput = document.getElementById('newMedicDate');
-                    const statusInput = document.getElementById('newMedicStatus');
-                    const procedureInput = document.getElementById('newMedicProcedure');
+                const text = input.value.trim();
+                const date = dateInput.value.trim();
+                const status = statusInput.value.trim();
+                const procedure = procedureInput.value.trim();
 
-                    const text = input.value.trim();
-                    const date = dateInput.value.trim();
-                    const status = statusInput.value.trim();
-                    const procedure = procedureInput.value.trim();
+                if (text && date && status && procedure) {
+                    addMedic(text, date, status, procedure);
+                } else {
+                    alert('Заполните все поля!');
+                }
+            });
+
+            document.getElementById('newMedicInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const text = this.value.trim();
+                    const date = document.getElementById('newMedicDate').value.trim();
+                    const status = document.getElementById('newMedicStatus').value.trim();
+                    const procedure = document.getElementById('newMedicProcedure').value.trim();
 
                     if (text && date && status && procedure) {
                         addMedic(text, date, status, procedure);
-                    } else {
-                        alert('Заполните все поля!');
                     }
-                });
-
-                document.getElementById('newMedicInput').addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        const text = this.value.trim();
-                        const date = document.getElementById('newMedicDate').value.trim();
-                        const status = document.getElementById('newMedicStatus').value.trim();
-                        const procedure = document.getElementById('newMedicProcedure').value.trim();
-
-                        if (text && date && status && procedure) {
-                            addMedic(text, date, status, procedure);
-                        }
-                    }
-                });
+                }
+            });
 
             // Обработчик кнопки выхода
             document.getElementById('logoutBtn').addEventListener('click', function(e) {

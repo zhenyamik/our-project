@@ -102,7 +102,7 @@ body {
 }
 
 .user {
-    background: #C8E6C9;
+    background: #F9FDF9;
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 40px;
@@ -239,7 +239,7 @@ body {
 
 .card .visit-item:hover,
 .card .medic-item:hover {
-    border-color: #4CAF50
+    border-color: #4CAF50;
     box-shadow: 0 5px 15px rgba(76, 175, 80, 0.12)
 }
 
