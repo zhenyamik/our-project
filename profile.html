@@ -79,8 +79,14 @@
                     <div class="info-block" >
                         <span class="info-label">Награды </span>
                         <span class="awards">Достижения</span>
-                        <p>1 место на выставке "Собаки Москвы 2023"</p> 
-                        <p>Лучший представитель породы 2022</p>
+                        <div id="awardItem" style="display: none">
+                            <input type="text" id="newAwardInput" placeholder="Достижение вашего питомца">
+                            <button id="cancelAwardBtn">Отмена</button>
+                            <button id="addAwardBtn">Добавить</button>
+                        </div>
+                        <ul class="award-list" id="awardList">
+                            <!-- Награды будут добавляться здесь -->
+                        </ul>
                     </div>
                 </div>
 
@@ -123,6 +129,7 @@
                 <button class="btn-profile" id="editPetProfileBtn">Редактировать профиль питомца</button>
                 <button class="btn-save" id="savePetProfileBtn" style="display: none;">Сохранить изменения</button>
                 <button class="btn-cancel" id="cancelPetProfileBtn" style="display: none;">Отмена</button>
+                <button class="btn-award" id="showAwardItemBtn">Добавить достижение</button>
                 <button class="btn-visit" id="showVisitItemBtn">Добавить посещение</button>
                 <button class="btn-medication" id="showMedicItemBtn">Добавить лекарство</button>
             </div>
@@ -163,10 +170,14 @@
             window.location.href = 'auth.html';
         }
 
-        // Загрузка визитов и лекарств из localStorage
+        // Загрузка данных питомца, наград, визитов и лекарств из localStorage
         function loadPetProfile() {
             const petProfile = localStorage.getItem('petProfile');
             return petProfile ? JSON.parse(petProfile) : null;
+        }
+        function loadAwards() {
+            const awards = localStorage.getItem('petAwards');
+            return awards ? JSON.parse(awards) : [];
         }
         function loadVisits() {
             const visits = localStorage.getItem('userVisits');
@@ -177,9 +188,12 @@
             return medics ? JSON.parse(medics) : [];
         }
 
-        // Сохранение визитов и лекарств в localStorage
+        // Сохранение данных питомца, наград, визитов и лекарств в localStorage
         function savePetProfile(petProfile) {
             localStorage.setItem('petProfile', JSON.stringify(petProfile));
+        }
+        function saveAwards(awards) {
+            localStorage.setItem('petAwards', JSON.stringify(awards))
         }
         function saveVisits(visits) {
             localStorage.setItem('userVisits', JSON.stringify(visits));
@@ -274,6 +288,43 @@
         function cancelEdit() {
             disableEditMode();
             renderPetProfile();
+        }
+
+        // Отображение наград
+        function renderAwards() {
+            const awards = loadAwards();
+            const awardList = document.getElementById('awardList');
+
+            awardList.innerHTML = '';
+
+            awards.forEach((award, index) => {
+                const awardItem = document.createElement('li');
+                awardItem.innerHTML = `
+                    <p>${award.text}</p>
+                    <button onclick="deleteAward(${index})">Удалить</button>`;
+                awardList.appendChild(awardItem);
+            });
+        }
+
+        // Добавление наград
+        function addAward(text) {
+            const awards = loadAwards();
+
+            awards.push({
+                text: text,
+            });
+
+            saveAwards(awards);
+            renderAwards();
+            document.getElementById('newAwardInput').value = '';
+        }
+
+        // Удаление награды
+        function deleteAward(index) {
+            const awards = loadAwards();
+            awards.splice(index, 1);
+            saveAwards(awards);
+            renderAwards();
         }
 
         // Отображение визитов и лекарств
@@ -403,10 +454,43 @@
             document.getElementById('savePetProfileBtn').addEventListener('click', editPetProfile);
             document.getElementById('cancelPetProfileBtn').addEventListener('click', cancelEdit);
 
-            // 3. Управление визитами и лекарстами
+            // 3. Управление наградами, визитами и лекарстами
+            renderAwards();
             renderVisits();
             renderMedics();
             
+            // Обработчик для добавления наград
+            document.getElementById('showAwardItemBtn').addEventListener('click', function() {
+                document.getElementById('awardItem').style.display = 'block';
+            });
+
+            document.getElementById('addAwardBtn').addEventListener('click', function() {
+                document.getElementById('awardItem').style.display = 'none';
+            });
+
+            document.getElementById('cancelAwardBtn').addEventListener('click', function() {
+                document.getElementById('awardItem').style.display = 'none';
+            });
+
+            document.getElementById('addAwardBtn').addEventListener('click', function() {
+                const input = document.getElementById('newAwardInput');
+                const text = input.value.trim();
+                
+                if (text) {
+                    addAward(text);
+                }
+            });
+                
+            document.getElementById('newAwardInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const text = this.value.trim();
+                        
+                    if (text) {
+                        addAward(text);
+                    }
+                }
+            });
+
             // Обработчики для добавления посещений
             document.getElementById('showVisitItemBtn').addEventListener('click', function() {
                 document.getElementById('visitItem').style.display = 'block';
