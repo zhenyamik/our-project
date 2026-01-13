@@ -172,34 +172,33 @@
 
         // Загрузка данных питомца, наград, визитов и лекарств из localStorage
         function loadPetProfile() {
-            const petProfile = localStorage.getItem('petProfile');
-            return petProfile ? JSON.parse(petProfile) : null;
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            return user.petProfile ? user.petProfile : {};
         }
         function loadAwards() {
-            const awards = localStorage.getItem('petAwards');
-            return awards ? JSON.parse(awards) : [];
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            return user.awards ? user.awards : [];
         }
         function loadVisits() {
-            const visits = localStorage.getItem('userVisits');
-            return visits ? JSON.parse(visits) : [];
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            return user.visits ? user.visits : [];
         }
         function loadMedics() {
-            const medics = localStorage.getItem('userMedics');
-            return medics ? JSON.parse(medics) : [];
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            return user.medics ? user.medics : [];
         }
 
         // Сохранение данных питомца, наград, визитов и лекарств в localStorage
-        function savePetProfile(petProfile) {
-            localStorage.setItem('petProfile', JSON.stringify(petProfile));
-        }
-        function saveAwards(awards) {
-            localStorage.setItem('petAwards', JSON.stringify(awards))
-        }
-        function saveVisits(visits) {
-            localStorage.setItem('userVisits', JSON.stringify(visits));
-        }
-        function saveMedics(medics) {
-            localStorage.setItem('userMedics', JSON.stringify(medics));
+        function saveUserData(dataType, data) {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            user[dataType] = data;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.id === user.id);
+            
+            users[userIndex][dataType] = data;
+            localStorage.setItem('users', JSON.stringify(users));
         }
 
         // Отображение данных питомца
@@ -271,7 +270,7 @@
                 birthDate: document.getElementById('petBirthDateInput').value.trim(),
             };
             
-            savePetProfile(petProfile);
+            saveUserData('petProfile', petProfile);
 
             document.getElementById('petNameText').textContent = petProfile.name || 'Не указано';
             document.getElementById('petSpecieText').textContent = petProfile.type || 'Не указано';
@@ -314,7 +313,7 @@
                 text: text,
             });
 
-            saveAwards(awards);
+            saveUserData('awards', awards);
             renderAwards();
             document.getElementById('newAwardInput').value = '';
         }
@@ -323,7 +322,7 @@
         function deleteAward(index) {
             const awards = loadAwards();
             awards.splice(index, 1);
-            saveAwards(awards);
+            saveUserData('awards', awards);
             renderAwards();
         }
 
@@ -381,7 +380,7 @@
                 procedure: procedure,
             });
 
-            saveVisits(visits);
+            saveUserData('visits', visits);
             renderVisits();
 
             document.getElementById('newVisitInput').value = '';
@@ -400,7 +399,7 @@
                 procedure: procedure,
             });
 
-            saveMedics(medics);
+            saveUserData('medics', medics);
             renderMedics();
 
             document.getElementById('newMedicInput').value = '';
@@ -408,8 +407,6 @@
             document.getElementById('newMedicStatus').value = '';
             document.getElementById('newMedicProcedure').value = '';
         }
-
-        // Здесь могло бы быть переключение статуса задачи toggleVisit
 
         // Удаление визита или лекарства
         function deleteVisit(index) {
@@ -443,121 +440,110 @@
                 document.getElementById('userName').textContent = currentUser.name;
                 document.getElementById('userEmail').textContent = currentUser.email;
 
-                // Загружаем данные питомца
+                // Инициализация интерактивных элементов
+
+                // 1. Обработчики для редактирования профиля питомца
                 renderPetProfile();
-            }
+                document.getElementById('editPetProfileBtn').addEventListener('click', enableEditMode);
+                document.getElementById('savePetProfileBtn').addEventListener('click', editPetProfile);
+                document.getElementById('cancelPetProfileBtn').addEventListener('click', cancelEdit);
 
-            // Инициализация интерактивных элементов
+                // 2. Управление наградами, визитами и лекарстами
+                renderAwards();
+                renderVisits();
+                renderMedics();
+        
+                // Обработчик для добавления наград
+                document.getElementById('showAwardItemBtn').addEventListener('click', function() {
+                    document.getElementById('awardItem').style.display = 'block';
+                });
 
-            // 1. Обработчики для редактирования профиля питомца
-            document.getElementById('editPetProfileBtn').addEventListener('click', enableEditMode);
-            document.getElementById('savePetProfileBtn').addEventListener('click', editPetProfile);
-            document.getElementById('cancelPetProfileBtn').addEventListener('click', cancelEdit);
+                document.getElementById('cancelAwardBtn').addEventListener('click', function() {
+                    document.getElementById('awardItem').style.display = 'none';
+                });
 
-            // 3. Управление наградами, визитами и лекарстами
-            renderAwards();
-            renderVisits();
-            renderMedics();
-            
-            // Обработчик для добавления наград
-            document.getElementById('showAwardItemBtn').addEventListener('click', function() {
-                document.getElementById('awardItem').style.display = 'block';
-            });
-
-            document.getElementById('addAwardBtn').addEventListener('click', function() {
-                document.getElementById('awardItem').style.display = 'none';
-            });
-
-            document.getElementById('cancelAwardBtn').addEventListener('click', function() {
-                document.getElementById('awardItem').style.display = 'none';
-            });
-
-            document.getElementById('addAwardBtn').addEventListener('click', function() {
-                const input = document.getElementById('newAwardInput');
-                const text = input.value.trim();
+                document.getElementById('addAwardBtn').addEventListener('click', function() {
+                    const input = document.getElementById('newAwardInput');
+                    const text = input.value.trim();
                 
-                if (text) {
-                    addAward(text);
-                }
-            });
-                
-            document.getElementById('newAwardInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const text = this.value.trim();
-                        
                     if (text) {
                         addAward(text);
+                        document.getElementById('awardItem').style.display = 'none';
                     }
-                }
-            });
+                });
+                
+                document.getElementById('newAwardInput').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const text = this.value.trim();
+                        
+                        if (text) {
+                            addAward(text);
+                        }
+                    }
+                });
 
-            // Обработчики для добавления посещений
-            document.getElementById('showVisitItemBtn').addEventListener('click', function() {
-                document.getElementById('visitItem').style.display = 'block';
-            });
+                // Обработчики для добавления посещений
+                document.getElementById('showVisitItemBtn').addEventListener('click', function() {
+                    document.getElementById('visitItem').style.display = 'block';
+                });
 
-            document.getElementById('addVisitBtn').addEventListener('click', function() {
-                document.getElementById('visitItem').style.display = 'none';
-            });
+                document.getElementById('cancelVisitBtn').addEventListener('click', function() {
+                    document.getElementById('visitItem').style.display = 'none';
+                });
 
-            document.getElementById('cancelVisitBtn').addEventListener('click', function() {
-                document.getElementById('visitItem').style.display = 'none';
-            });
+                document.getElementById('addVisitBtn').addEventListener('click', function() {
+                    const input = document.getElementById('newVisitInput');
+                    const dateInput = document.getElementById('newVisitDate');
+                    const statusInput = document.getElementById('newVisitStatus');
+                    const procedureInput = document.getElementById('newVisitProcedure');
 
-            document.getElementById('addVisitBtn').addEventListener('click', function() {
-                const input = document.getElementById('newVisitInput');
-                const dateInput = document.getElementById('newVisitDate');
-                const statusInput = document.getElementById('newVisitStatus');
-                const procedureInput = document.getElementById('newVisitProcedure');
+                    const text = input.value.trim();
+                    const date = dateInput.value.trim();
+                    const status = statusInput.value.trim();
+                    const procedure = procedureInput.value.trim();
 
-                const text = input.value.trim();
-                const date = dateInput.value.trim();
-                const status = statusInput.value.trim();
-                const procedure = procedureInput.value.trim();
-
-                if (text && date && status && procedure) {
-                    addVisit(text, date, status, procedure);
-                } else {
-                    alert('Заполните все поля!');
-                }
-            });
+                    if (text && date && status && procedure) {
+                        addVisit(text, date, status, procedure);
+                        document.getElementById('visitItem').style.display = 'none';
+                    } else {
+                        alert('Заполните все поля!');
+                    }
+                });
             
-            // Обработчики для добавления лекарств
-            document.getElementById('showMedicItemBtn').addEventListener('click', function() {
-                document.getElementById('medicItem').style.display = 'block';
-            });
+                // Обработчики для добавления лекарств
+                document.getElementById('showMedicItemBtn').addEventListener('click', function() {
+                    document.getElementById('medicItem').style.display = 'block';
+                });
 
-            document.getElementById('addMedicBtn').addEventListener('click', function() {
-                document.getElementById('medicItem').style.display = 'none';
-            });
+                document.getElementById('cancelMedicBtn').addEventListener('click', function() {
+                    document.getElementById('medicItem').style.display = 'none';
+                });
+    
+                document.getElementById('addMedicBtn').addEventListener('click', function() {
+                    const input = document.getElementById('newMedicInput');
+                    const dateInput = document.getElementById('newMedicDate');
+                    const statusInput = document.getElementById('newMedicStatus');
+                    const procedureInput = document.getElementById('newMedicProcedure');
 
-            document.getElementById('cancelMedicBtn').addEventListener('click', function() {
-                document.getElementById('medicItem').style.display = 'none';
-            });
+                    const text = input.value.trim();
+                    const date = dateInput.value.trim();
+                    const status = statusInput.value.trim();
+                    const procedure = procedureInput.value.trim();
 
-            document.getElementById('addMedicBtn').addEventListener('click', function() {
-                const input = document.getElementById('newMedicInput');
-                const dateInput = document.getElementById('newMedicDate');
-                const statusInput = document.getElementById('newMedicStatus');
-                const procedureInput = document.getElementById('newMedicProcedure');
+                    if (text && date && status && procedure) {
+                        addMedic(text, date, status, procedure);
+                        document.getElementById('medicItem').style.display = 'none';
+                    } else {
+                        alert('Заполните все поля!');
+                    }
+                });
 
-                const text = input.value.trim();
-                const date = dateInput.value.trim();
-                const status = statusInput.value.trim();
-                const procedure = procedureInput.value.trim();
-
-                if (text && date && status && procedure) {
-                    addMedic(text, date, status, procedure);
-                } else {
-                    alert('Заполните все поля!');
-                }
-            });
-
-            // Обработчик кнопки выхода
-            document.getElementById('logoutBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                logout();
-            });
+                // 3. Обработчик кнопки выхода
+                document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            };
         });
     </script>
 </body>
