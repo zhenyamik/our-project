@@ -564,4 +564,202 @@ body {
         min-width: auto;
         width: 100%;
     }
+    // Стили для режима редактирования анкеты питомца //
+.pet-info-edit {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Nunito', Arial, sans-serif;
+    background: #F9FDF9;
+    color: #333;
+    transition: all 0.3s ease;
+    margin-bottom: 3px;
+}
+
+.pet-info-edit:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    border-color: #2E7D32;
+}
+
+.pet-info-edit::placeholder {
+    color: #999;
+    font-weight: 400;
+}
+
+// Стили для достижений (наград) //
+.award-list {
+    list-style: none;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.award-list li {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #FF9800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.3s ease;
+}
+
+.award-list li p {
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+}
+
+.award-list li button {
+    background: #FF5252;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.award-list li button:hover {
+    background: #FF0000;
+    transform: scale(1.05);
+}
+
+// Контейнер для добавления новой награды //
+#awardItem {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #E8F5E9;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.08);
+}
+
+#newAwardInput {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 18px;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    background: #FAFAFA;
+    transition: all 0.3s ease;
+}
+
+#newAwardInput:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+#awardItem button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+#awardItem button:hover {
+    background: #43A047;
+    transform: translateY(-2px);
+}
+
+#cancelAwardBtn {
+    background: #757575;
+}
+
+#cancelAwardBtn:hover {
+    background: #616161;
+}
+
+// Стили для карточек в столбик //
+.visit-list li,
+.medic-list li {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #4CAF50;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    animation: fadeIn 0.3s ease;
+    position: relative;
+    padding-right: 100px; /* Место для кнопки удаления */
+}
+
+.visit-list li:hover,
+.medic-list li:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+// Подписи для полей в столбик //
+.visit-list li span:nth-child(1)::before,
+.medic-list li span:nth-child(1)::before {
+    content: "Название: ";
+    color: #2E7D32;
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 5px;
+}
+
+.visit-list li span:nth-child(2)::before,
+.medic-list li span:nth-child(2)::before {
+    content: "Дата: ";
+    color: #2E7D32;
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 5px;
+}
+
+.visit-list li span:nth-child(3)::before,
+.medic-list li span:nth-child(3)::before {
+    content: "Цель: ";
+    color: #2E7D32;
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 5px;
+}
+
+.visit-list li span:nth-child(4)::before {
+    content: "Процедуры: ";
+    color: #2E7D32;
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 5px;
+}
+
+.medic-list li span:nth-child(4)::before {
+    content: "Курс: ";
+    color: #2E7D32;
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 5px;
+}
 }
