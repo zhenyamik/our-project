@@ -412,14 +412,14 @@
         function deleteVisit(index) {
             const visits = loadVisits();
             visits.splice(index, 1);
-            saveVisits(visits);
+            saveUserData('visits', visits);
             renderVisits();
         }
 
         function deleteMedic(index) {
             const medics = loadMedics();
             medics.splice(index, 1);
-            saveMedics(medics);
+            saveUserData('medics', medics);
             renderMedics();
         }
 
