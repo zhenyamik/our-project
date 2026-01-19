@@ -88,9 +88,9 @@
             if (!localStorage.getItem('users')) {
                 // Начальные пользователи для тестирования
                 const initialUsers = [
-                    { id: 1, name: "Иванов Иван", email: "ivan@test.ru", password: "123456"},
-                    { id: 2, name: "Петрова Мария", email: "maria@test.ru", password: "123456"},
-                    { id: 3, name: "Сидоров Алексей", email: "alex@test.ru", password: "123456"}
+                    { id: 1, name: "Иванов Иван", email: "ivan@test.ru", password: "123456", petProfile: {}, allergies: [], awards: [], visits: [], medics: []},
+                    { id: 2, name: "Петрова Мария", email: "maria@test.ru", password: "123456", petProfile: {}, allergies: [], awards: [], visits: [], medics: []},
+                    { id: 3, name: "Сидоров Алексей", email: "alex@test.ru", password: "123456", petProfile: {}, allergies: [], awards: [], visits: [], medics: []}
                 ];
                 localStorage.setItem('users', JSON.stringify(initialUsers));
                 localStorage.setItem('nextUserId', '4');
@@ -134,7 +134,12 @@
                 id: getNextUserId(),
                 name: name,
                 email: email,
-                password: password
+                password: password,
+                petProfile: {},
+                allergies: [],
+                awards: [],
+                visits: [],
+                medics: [],
             };
             
             users.push(newUser);

@@ -77,7 +77,18 @@
                         </div>
                     </div>     
                     <div class="info-block" >
-                        <span class="info-label">Награды </span>
+                        <span class="info-label">Аллергии</span>
+                        <div id="allergyItem" style="display: none">
+                            <input type="text" id="newAllergyInput" placeholder="Аллергии вашего питомца">
+                            <button id="cancelAllergyBtn">Отмена</button>
+                            <button id="addAllergyBtn">Добавить</button>
+                        </div>
+                        <ul class="allergy-list" id="allergyList">
+                            <!-- Аллергии будут добавляться здесь -->
+                        </ul>
+                    </div>     
+                    <div class="info-block" >
+                        <span class="info-label">Награды</span>
                         <span class="awards">Достижения</span>
                         <div id="awardItem" style="display: none">
                             <input type="text" id="newAwardInput" placeholder="Достижение вашего питомца">
@@ -129,6 +140,7 @@
                 <button class="btn-profile" id="editPetProfileBtn">Редактировать профиль питомца</button>
                 <button class="btn-save" id="savePetProfileBtn" style="display: none;">Сохранить изменения</button>
                 <button class="btn-cancel" id="cancelPetProfileBtn" style="display: none;">Отмена</button>
+                <button class="btn-allery" id="showAllergyItemBtn">Добавить аллергию</button>
                 <button class="btn-award" id="showAwardItemBtn">Добавить достижение</button>
                 <button class="btn-visit" id="showVisitItemBtn">Добавить посещение</button>
                 <button class="btn-medication" id="showMedicItemBtn">Добавить лекарство</button>
@@ -174,6 +186,10 @@
         function loadPetProfile() {
             const user = JSON.parse(localStorage.getItem('currentUser'));
             return user.petProfile ? user.petProfile : {};
+        }
+        function loadAllergies() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            return user.allergies ? user.allergies : [];
         }
         function loadAwards() {
             const user = JSON.parse(localStorage.getItem('currentUser'));
@@ -289,6 +305,43 @@
             renderPetProfile();
         }
 
+        // Отображение аллергий
+        function renderAllergies() {
+            const allergies = loadAllergies();
+            const allergyList = document.getElementById('allergyList');
+
+            allergyList.innerHTML = '';
+
+            allergies.forEach((allergy, index) => {
+                const allergyItem = document.createElement('li');
+                allergyItem.innerHTML = `
+                    <p>${allergy.text}</p>
+                    <button onclick="deleteAllergy(${index})">Удалить</button>;`;
+                allergyList.appendChild(allergyItem);
+            });
+        }
+
+        // Добавление аллергий
+        function addAllergy(text) {
+            const allergies = loadAllergies();
+
+            allergies.push({
+                text: text,
+            });
+
+            saveUserData('allergies', allergies);
+            renderAllergies();
+            document.getElementById('newAllergyInput').value = '';
+        }
+
+        // Удаление аллергии
+        function deleteAllergy(index) {
+            const allergies = loadAllergies();
+            allergies.splice(index, 1);
+            saveUserData('allergies', allergies);
+            renderAllergies();
+        }
+
         // Отображение наград
         function renderAwards() {
             const awards = loadAwards();
@@ -324,6 +377,11 @@
             awards.splice(index, 1);
             saveUserData('awards', awards);
             renderAwards();
+        }
+
+        // Проверка даты
+        function dateCheck(string) {
+            return /[a-zA-Zа-яА-ЯёЁ]/.test(string)
         }
 
         // Отображение визитов и лекарств
@@ -449,9 +507,40 @@
                 document.getElementById('cancelPetProfileBtn').addEventListener('click', cancelEdit);
 
                 // 2. Управление наградами, визитами и лекарстами
+                renderAllergies();
                 renderAwards();
                 renderVisits();
                 renderMedics();
+        
+                // Обработчик для добавления аллергий
+                document.getElementById('showAllergyItemBtn').addEventListener('click', function() {
+                    document.getElementById('allergyItem').style.display = 'block';
+                });
+
+                document.getElementById('cancelAllergyBtn').addEventListener('click', function() {
+                    document.getElementById('newAllergyInput').value = '';
+                    document.getElementById('allergyItem').style.display = 'none';
+                });
+
+                document.getElementById('addAllergyBtn').addEventListener('click', function() {
+                    const input = document.getElementById('newAllergyInput');
+                    const text = input.value.trim();
+                
+                    if (text) {
+                        addAllergy(text);
+                        document.getElementById('allergyItem').style.display = 'none';
+                    }
+                });
+                
+                document.getElementById('newAllergyInput').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const text = this.value.trim();
+                        
+                        if (text) {
+                            addAllergy(text);
+                        }
+                    }
+                });
         
                 // Обработчик для добавления наград
                 document.getElementById('showAwardItemBtn').addEventListener('click', function() {
@@ -459,6 +548,7 @@
                 });
 
                 document.getElementById('cancelAwardBtn').addEventListener('click', function() {
+                    document.getElementById('newAwardInput').value = '';
                     document.getElementById('awardItem').style.display = 'none';
                 });
 
@@ -488,6 +578,10 @@
                 });
 
                 document.getElementById('cancelVisitBtn').addEventListener('click', function() {
+                    document.getElementById('newVisitInput').value = '';
+                    document.getElementById('newVisitDate').value = '';
+                    document.getElementById('newVisitStatus').value = '';
+                    document.getElementById('newVisitProcedure').value ='';
                     document.getElementById('visitItem').style.display = 'none';
                 });
 
@@ -502,11 +596,15 @@
                     const status = statusInput.value.trim();
                     const procedure = procedureInput.value.trim();
 
-                    if (text && date && status && procedure) {
-                        addVisit(text, date, status, procedure);
-                        document.getElementById('visitItem').style.display = 'none';
-                    } else {
+                    if (!(text && date && status && procedure)) {
                         alert('Заполните все поля!');
+                    }
+                    else if (dateCheck(date)) {
+                        alert('Дата не должна содержать буквы');
+                    }
+                    else {
+                        addMedic(text, date, status, procedure);
+                        document.getElementById('medicItem').style.display = 'none';
                     }
                 });
             
@@ -516,6 +614,10 @@
                 });
 
                 document.getElementById('cancelMedicBtn').addEventListener('click', function() {
+                    document.getElementById('newMedicInput').value = '';
+                    document.getElementById('newMedicDate').value = '';
+                    document.getElementById('newMedicStatus').value = '';
+                    document.getElementById('newMedicProcedure').value ='';
                     document.getElementById('medicItem').style.display = 'none';
                 });
     
@@ -530,11 +632,15 @@
                     const status = statusInput.value.trim();
                     const procedure = procedureInput.value.trim();
 
-                    if (text && date && status && procedure) {
+                    if (!(text && date && status && procedure)) {
+                        alert('Заполните все поля!');
+                    }
+                    else if (dateCheck(date)) {
+                        alert('Дата не должна содержать буквы');
+                    }
+                    else {
                         addMedic(text, date, status, procedure);
                         document.getElementById('medicItem').style.display = 'none';
-                    } else {
-                        alert('Заполните все поля!');
                     }
                 });
 
