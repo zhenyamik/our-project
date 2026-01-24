@@ -185,22 +185,13 @@ body {
     border-left: 4px solid #4CAF50;
     margin-top: 25px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    animation: fadeIn 0.3s ease;
 }
 
 .info-label {
     display: block;
     color: #2E7D32;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 3px;
-}
-
-.info-block span:first-of-type {
-    margin-bottom: 0;
-}
-
-.awards {
-    color: #FF9800;
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 3px;
@@ -329,7 +320,8 @@ ul {
 }
 
 .visit-list li:hover,
-.medic-list li:hover {
+.medic-list li:hover,
+.info-block:hover {
     transform: translateX(5px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }

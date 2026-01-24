@@ -88,8 +88,7 @@
                         </ul>
                     </div>     
                     <div class="info-block" >
-                        <span class="info-label">Награды</span>
-                        <span class="awards">Достижения</span>
+                        <span class="info-label">Награды и Достижения</span>
                         <div class="item" id="awardItem" style="display: none">
                             <input type="text" id="newAwardInput" placeholder="Достижение вашего питомца">
                             <div class="input-button">
@@ -219,6 +218,11 @@
             localStorage.setItem('users', JSON.stringify(users));
         }
 
+        // Проверка даты
+        function dateCheck(string) {
+            return /[a-zA-Zа-яА-ЯёЁ]/.test(string)
+        }
+
         // Отображение данных питомца
         function renderPetProfile() {
             const petProfile = loadPetProfile();
@@ -289,16 +293,20 @@
             };
             
             saveUserData('petProfile', petProfile);
-
-            document.getElementById('petNameText').textContent = petProfile.name || 'Не указано';
-            document.getElementById('petSpecieText').textContent = petProfile.type || 'Не указано';
-            document.getElementById('petBreedText').textContent = petProfile.breed || 'Не указано';
-            document.getElementById('petAgeText').textContent = petProfile.age || 'Не указано';
-            document.getElementById('petWeightText').textContent = petProfile.weight || 'Не указано';
-            document.getElementById('petHeightText').textContent = petProfile.height || 'Не указано';
-            document.getElementById('petBirthDateText').textContent = petProfile.birthDate || 'Не указано';
             
-            disableEditMode();
+            if (dateCheck(petProfile.birthDate)) {
+                alert('Дата рождения не должна содержать буквы');
+            }
+            else {
+                document.getElementById('petNameText').textContent = petProfile.name || 'Не указано';
+                document.getElementById('petSpecieText').textContent = petProfile.type || 'Не указано';
+                document.getElementById('petBreedText').textContent = petProfile.breed || 'Не указано';
+                document.getElementById('petAgeText').textContent = petProfile.age || 'Не указано';
+                document.getElementById('petWeightText').textContent = petProfile.weight || 'Не указано';
+                document.getElementById('petHeightText').textContent = petProfile.height || 'Не указано';
+                document.getElementById('petBirthDateText').textContent = petProfile.birthDate || 'Не указано';
+                disableEditMode();
+            }
         }
 
         // Отмена редактирования Data
@@ -383,11 +391,6 @@
             awards.splice(index, 1);
             saveUserData('awards', awards);
             renderAwards();
-        }
-
-        // Проверка даты
-        function dateCheck(string) {
-            return /[a-zA-Zа-яА-ЯёЁ]/.test(string)
         }
 
         // Отображение визитов и лекарств
