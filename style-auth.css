@@ -207,22 +207,3 @@ body {
     margin-bottom: 10px;
     transition: color 0.3s ease;
 }
-
-@media (max-width: 768px) {
-    .auth-container {
-        flex-direction: column;
-        gap: 30px;
-    }
-    
-    .form-card {
-        padding: 30px 20px;
-    }
-    
-    .section-title {
-        font-size: 28px;
-    }
-    
-    .footer-content {
-        gap: 40px;
-    }
-}
